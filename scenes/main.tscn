@@ -1,0 +1,55 @@
+[gd_scene load_steps=9 format=3 uid="uid://b6qoucxdc2snh"]
+
+[ext_resource type="Texture2D" uid="uid://cmdfciulb0k7b" path="res://assets/dev/grids/Dark/texture_07.png" id="1_b4taq"]
+[ext_resource type="Texture2D" uid="uid://dk4ijpkefj3pq" path="res://assets/hdri/animestyled_hdr.hdr" id="2_k7vaq"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="3_f5nh4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_atry3"]
+albedo_color = Color(0.533333, 0.533333, 0.533333, 1)
+albedo_texture = ExtResource("1_b4taq")
+uv1_triplanar = true
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_wktws"]
+panorama = ExtResource("2_k7vaq")
+
+[sub_resource type="Sky" id="Sky_dxyy7"]
+sky_material = SubResource("PanoramaSkyMaterial_wktws")
+
+[sub_resource type="Environment" id="Environment_t07j4"]
+background_mode = 2
+sky = SubResource("Sky_dxyy7")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e4tum"]
+
+[node name="world" type="Node3D"]
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_t07j4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 1.90424, -1.94847)
+shadow_enabled = true
+
+[node name="player" type="CharacterBody3D" parent="."]
+script = ExtResource("3_f5nh4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_e4tum")
+
+[node name="head" type="Node3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+
+[node name="Camera3D" type="Camera3D" parent="player/head"]
