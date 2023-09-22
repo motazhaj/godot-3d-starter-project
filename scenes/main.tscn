@@ -14,12 +14,15 @@ sky_material = SubResource("PanoramaSkyMaterial_wktws")
 background_mode = 2
 sky = SubResource("Sky_dxyy7")
 tonemap_mode = 3
+ssr_enabled = true
 ssao_enabled = true
 ssao_radius = 0.67
 ssao_intensity = 4.33
-ssil_enabled = true
 ssil_intensity = 10.98
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
 sdfgi_bounce_feedback = 1.0
+sdfgi_energy = 5.0
 glow_enabled = true
 glow_strength = 1.47
 fog_light_color = Color(0.541176, 0.568627, 0.611765, 1)
@@ -28,7 +31,8 @@ fog_sun_scatter = 0.29
 fog_density = 0.0055
 fog_sky_affect = 0.069
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.0291
+volumetric_fog_density = 0.029
+volumetric_fog_albedo = Color(0.367188, 0.710938, 0.996094, 1)
 volumetric_fog_sky_affect = 0.0
 adjustment_enabled = true
 adjustment_saturation = 1.18
@@ -62,7 +66,19 @@ shadow_enabled = true
 [node name="stage" type="Node3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(4.26943, 0, 0, 0, 0.992892, 0, 0, 0, 5.16304, 0, -0.5, 0)
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 0.3, 0, -1, -1.31134e-08, 0, 6.5, 25)
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 0.3, 0, -1, -1.31134e-08, 0, 6.5, -25)
 use_collision = true
 size = Vector3(50, 1, 50)
 material = SubResource("StandardMaterial3D_atry3")
@@ -80,7 +96,7 @@ size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_atry3")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="stage"]
-transform = Transform3D(0.0840468, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.0806008, 4.46946, -0.000193633, -3.80465, 7.09926, 5.29485)
+transform = Transform3D(0.0840468, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.0806008, 4.46946, -0.000193633, -3.80465, 6.97456, 5.29485)
 use_collision = true
 size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_atry3")

@@ -10,9 +10,10 @@ extends CharacterBody3D
 
 # Speed variables
 var currentSpeed = 5.0
-const walkSpeed = 5
-const sprintSpeed = 8.0
+const walkSpeed = 5.0
+const sprintSpeed = 10.0
 const crouchSpeed = 2.5
+var speedReader = 0.0
 
 # States
 var walk = false
@@ -23,15 +24,29 @@ var slide = false
 
 # Slide variables
 var slideTimer = 0.0
-var slideTimerMax = 1.0
+const slideTimerMax = 1.0
 var slideVector = Vector2.ZERO
-var slideSpeed = 15.0
+const slideSpeed = 8.0
+
+# Headbobbing variables
+var headBobSprintSpeed = 30.0
+var headBobWalkSpeed = 15.0
+var headBobCrouchSpeed = 10.0
+
+var headBobSprintIntensity = 0.2 #m
+var headBobWalkIntensity = 0.1 #m
+var headBobCrouchIntensity = 0.05 #m
+
+var headBobVector = Vector2.ZERO
+var headBobIndex = 0.0
+var headBobCurrentIntensity = 0.0
 
 # Movement variables
-const jumpVelocity = 10
-var lerpSpeed = 10.0
+const jumpVelocity = 8
 var crouchDepth = -0.5
 var freeLookTilt = 10
+var lerpSpeed = 10.0
+var airLerpSpeed = lerpSpeed/2
 
 # Input variables
 var direction = Vector3.ZERO
@@ -65,9 +80,9 @@ func _physics_process(delta):
 	# Crouch
 	if (Input.is_action_pressed("crouch") && is_on_floor()) || slide:
 		
-		currentSpeed = crouchSpeed
+		currentSpeed = lerp(currentSpeed, crouchSpeed, delta * 5.0)
 				
-		head.position.y = lerp(head.position.y, crouchDepth , delta*lerpSpeed)
+		neck.position.y = lerp(neck.position.y, 1.7+crouchDepth , delta*lerpSpeed)
 		
 		standCollision.disabled  = true
 		crouchCollision.disabled  = false
@@ -77,7 +92,10 @@ func _physics_process(delta):
 			slide = true
 			slideTimer = slideTimerMax
 			slideVector = input_dir
-			print("slide start")
+		
+		# Slide tilt
+		if slide:
+			neck.rotation.z = lerp(neck.rotation.z, -deg_to_rad(10.0) , delta*lerpSpeed)
 		
 		walk = false
 		sprint = false
@@ -86,7 +104,7 @@ func _physics_process(delta):
 	elif !rayCast3d.is_colliding():
 		
 		# Stand
-		head.position.y = lerp(head.position.y, 0.0 , delta*lerpSpeed)
+		neck.position.y = lerp(neck.position.y, 1.7 , delta*lerpSpeed)
 		
 		standCollision.disabled  = false
 		crouchCollision.disabled  = true
@@ -97,58 +115,80 @@ func _physics_process(delta):
 		
 		if Input.is_action_pressed("sprint"):
 			# Sprint
-			currentSpeed = sprintSpeed
+			currentSpeed = lerp(currentSpeed, sprintSpeed, delta * 5.0)
 			
 			walk = false
 			sprint = true
 			crouch = false
-		else:
+		elif is_on_floor():
 			# Walk
-			currentSpeed = walkSpeed
+			currentSpeed = lerp(currentSpeed, walkSpeed, delta * 5.0)
 			
 			walk = true
 			sprint = false
 			crouch = false
 	
-	# Handle slide end
-	if slide:
-		slideTimer -= delta
-		if slideTimer <= 0:
-			slide = false
-			print("slide end")
-	
-	# Handle free look
-	if Input.is_action_pressed("freeLook"):
-		freeLook = true
-		camera.rotation.z = -deg_to_rad(neck.rotation.y * freeLookTilt)
-	else:
-		freeLook = false
-		neck.rotation.y = lerp(neck.rotation.y,0.0,delta*20)
-		camera.rotation.z = lerp(camera.rotation.z,0.0,delta*20)
-		
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-
+			
 	# Handle Jump.
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		crouch = false
 		slide = false
 		velocity.y = jumpVelocity
 
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*lerpSpeed)
+	# Handle slide end
+	if slide:
+		slideTimer -= delta
+		if slideTimer <= 0:
+			slide = false
+		
+	# Handel head bob
+	if sprint:
+		headBobCurrentIntensity = headBobSprintIntensity
+		headBobIndex += headBobSprintSpeed * delta
+	elif walk:
+		headBobCurrentIntensity = headBobWalkIntensity
+		headBobIndex += headBobWalkSpeed * delta
+	elif crouch:
+		headBobCurrentIntensity = headBobCrouchIntensity
+		headBobIndex += headBobCrouchSpeed * delta
+	
+	if is_on_floor() && !slide && input_dir != Vector2.ZERO:
+		headBobVector.y = sin(headBobIndex)
+		headBobVector.x = sin(headBobIndex/2)+0.5
+		
+		head.position.y = lerp(head.position.y, headBobVector.y * (headBobCurrentIntensity/2), delta*lerpSpeed)
+		head.position.x = lerp(head.position.x, headBobVector.x * (headBobCurrentIntensity), delta*lerpSpeed)
+	else:
+		head.position.y = lerp(head.position.y, 0.0, delta*lerpSpeed)
+		head.position.x = lerp(head.position.x, 0.0, delta*lerpSpeed)
+	
+	# Handle free look
+	if Input.is_action_pressed("freeLook"):
+		freeLook = true
+		head.rotation.z = -deg_to_rad(neck.rotation.y * freeLookTilt)
+	else:
+		freeLook = false
+		neck.rotation.y = lerp(neck.rotation.y,0.0,delta*20)
+		head.rotation.z = lerp(head.rotation.z,0.0,delta*20)
+		
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y -= gravity * delta
+
+	if is_on_floor():
+		direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*lerpSpeed)
+	else:
+		if input_dir != Vector2.ZERO:
+			direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*airLerpSpeed)
+	
 	if slide:
 		direction = transform.basis * Vector3(slideVector.x , 0 , slideVector.y)
+		currentSpeed = (slideTimer * slideSpeed + sprintSpeed)
 		
 	if direction:
 		velocity.x = direction.x * currentSpeed
 		velocity.z = direction.z * currentSpeed
-		
-		if slide:
-			velocity.x = direction.x * slideTimer * (slideSpeed + walkSpeed)
-			velocity.z = direction.z * slideTimer * (slideSpeed + walkSpeed)
-		
+	
 		if Input.is_action_pressed("right"):
 			neck.rotation.z = lerp(neck.rotation.z, -deg_to_rad(3.0) , delta*lerpSpeed)
 		elif Input.is_action_pressed("left"):
@@ -158,5 +198,8 @@ func _physics_process(delta):
 	else:
 		velocity.x = move_toward(velocity.x, 0, currentSpeed)
 		velocity.z = move_toward(velocity.z, 0, currentSpeed)
-
+	
+	speedReader = Vector3(velocity.x,velocity.y,velocity.z).length()
+	# print (speedReader)
+	
 	move_and_slide()
