@@ -1,13 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://b6qoucxdc2snh"]
 
-[ext_resource type="Texture2D" uid="uid://cmdfciulb0k7b" path="res://assets/dev/grids/Dark/texture_07.png" id="1_b4taq"]
+[ext_resource type="Texture2D" uid="uid://c6t180pi31yxy" path="res://assets/dev/grids/dark/texture_13.png" id="2_fh4t2"]
 [ext_resource type="Texture2D" uid="uid://dk4ijpkefj3pq" path="res://assets/hdri/animestyled_hdr.hdr" id="2_k7vaq"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="3_f5nh4"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_atry3"]
-albedo_color = Color(0.533333, 0.533333, 0.533333, 1)
-albedo_texture = ExtResource("1_b4taq")
-uv1_triplanar = true
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_wktws"]
 panorama = ExtResource("2_k7vaq")
@@ -18,8 +13,32 @@ sky_material = SubResource("PanoramaSkyMaterial_wktws")
 [sub_resource type="Environment" id="Environment_t07j4"]
 background_mode = 2
 sky = SubResource("Sky_dxyy7")
-tonemap_mode = 2
+tonemap_mode = 3
+ssao_enabled = true
+ssao_radius = 0.67
+ssao_intensity = 4.33
+ssil_enabled = true
+ssil_intensity = 10.98
+sdfgi_bounce_feedback = 1.0
 glow_enabled = true
+glow_strength = 1.47
+fog_light_color = Color(0.541176, 0.568627, 0.611765, 1)
+fog_light_energy = 1.44
+fog_sun_scatter = 0.29
+fog_density = 0.0055
+fog_sky_affect = 0.069
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0291
+volumetric_fog_sky_affect = 0.0
+adjustment_enabled = true
+adjustment_saturation = 1.18
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_atry3"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.533333, 0.533333, 0.533333, 1)
+albedo_texture = ExtResource("2_fh4t2")
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e4tum"]
 height = 1.9
@@ -29,12 +48,23 @@ height = 1.2
 
 [node name="world" type="Node3D"]
 
+[node name="env" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_t07j4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(0.686148, 0.63, -0.363731, -0.266025, 0.682669, 0.680584, 0.677076, -0.37022, 0.636008, 0, 5.06496, -1.94847)
+light_energy = 2.387
+light_indirect_energy = 4.0
+shadow_enabled = true
+
 [node name="stage" type="Node3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 use_collision = true
-size = Vector3(20, 1, 20)
+size = Vector3(50, 1, 50)
 material = SubResource("StandardMaterial3D_atry3")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="stage"]
@@ -43,17 +73,32 @@ use_collision = true
 size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_atry3")
 
-[node name="env" type="Node3D" parent="."]
+[node name="CSGBox3D3" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.116449, 0, 0, 0, 6.19782, 0, 0, 0, 0.147072, -5.50471, 2.9747, 2.48765)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
-environment = SubResource("Environment_t07j4")
+[node name="CSGBox3D6" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.0840468, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.0806008, 4.46946, -0.000193633, -3.80465, 7.09926, 5.29485)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 1.90424, -1.94847)
-shadow_enabled = true
+[node name="CSGBox3D4" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.116449, 0, 0, 0, 1.28345, 0, 0, 0, 0.147072, -2.94, 0.52301, 0.843763)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.116449, 0, 0, 0, 1.28345, 0, 0, 0, 0.147072, -2.94, 1.41309, -1.16219)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
 
 [node name="player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.49758)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.62736, 0, 4.11738)
 script = ExtResource("3_f5nh4")
 
 [node name="standCollision" type="CollisionShape3D" parent="player"]
@@ -64,10 +109,13 @@ shape = SubResource("CapsuleShape3D_e4tum")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("CapsuleShape3D_sabve")
 
-[node name="head" type="Node3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
-
-[node name="Camera3D" type="Camera3D" parent="player/head"]
-
 [node name="RayCast3D" type="RayCast3D" parent="player"]
 target_position = Vector3(0, 1.9, 0)
+
+[node name="neck" type="Node3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+
+[node name="head" type="Node3D" parent="player/neck"]
+
+[node name="Camera3D" type="Camera3D" parent="player/neck/head"]
+fov = 80.0
