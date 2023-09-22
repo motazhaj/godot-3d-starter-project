@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b6qoucxdc2snh"]
+[gd_scene load_steps=10 format=3 uid="uid://b6qoucxdc2snh"]
 
 [ext_resource type="Texture2D" uid="uid://cmdfciulb0k7b" path="res://assets/dev/grids/Dark/texture_07.png" id="1_b4taq"]
 [ext_resource type="Texture2D" uid="uid://dk4ijpkefj3pq" path="res://assets/hdri/animestyled_hdr.hdr" id="2_k7vaq"]
@@ -22,6 +22,10 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e4tum"]
+height = 1.9
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sabve"]
+height = 1.2
 
 [node name="world" type="Node3D"]
 
@@ -29,6 +33,12 @@ glow_enabled = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -10.598)
 use_collision = true
 size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_atry3")
@@ -43,13 +53,21 @@ transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75
 shadow_enabled = true
 
 [node name="player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.49758)
 script = ExtResource("3_f5nh4")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+[node name="standCollision" type="CollisionShape3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 shape = SubResource("CapsuleShape3D_e4tum")
+
+[node name="crouchCollision" type="CollisionShape3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("CapsuleShape3D_sabve")
 
 [node name="head" type="Node3D" parent="player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
 
 [node name="Camera3D" type="Camera3D" parent="player/head"]
+
+[node name="RayCast3D" type="RayCast3D" parent="player"]
+target_position = Vector3(0, 1.9, 0)
