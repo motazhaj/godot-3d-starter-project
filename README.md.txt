@@ -1,1 +1,0 @@
-* fps controller template in godot game engine
