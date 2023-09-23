@@ -7,13 +7,13 @@ extends CharacterBody3D
 @onready var rayCast3d = $RayCast3D
 @onready var neck = $neck
 @onready var camera = $neck/head/Camera3D
+@onready var animationPlayer = $neck/head/AnimationPlayer
 
 # Speed variables
 var currentSpeed = 5.0
 const walkSpeed = 5.0
 const sprintSpeed = 10.0
 const crouchSpeed = 2.5
-var speedReader = 0.0
 
 # States
 var walk = false
@@ -47,6 +47,7 @@ var crouchDepth = -0.5
 var freeLookTilt = 10
 var lerpSpeed = 10.0
 var airLerpSpeed = lerpSpeed/2
+var lastVelocity = Vector3.ZERO
 
 # Input variables
 var direction = Vector3.ZERO
@@ -129,12 +130,22 @@ func _physics_process(delta):
 			crouch = false
 	
 			
-	# Handle Jump.
+	# Handle jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
+		animationPlayer.play("jump")
 		crouch = false
 		slide = false
 		velocity.y = jumpVelocity
-
+	
+	# Handle land
+	if is_on_floor():
+		if -lastVelocity.y > 10.0:
+			animationPlayer.play("landHeavy")
+			print(lastVelocity.y)
+		elif -lastVelocity.y > 0.0:
+			animationPlayer.play("land")
+			print(lastVelocity.y)		
+			
 	# Handle slide end
 	if slide:
 		slideTimer -= delta
@@ -198,8 +209,7 @@ func _physics_process(delta):
 	else:
 		velocity.x = move_toward(velocity.x, 0, currentSpeed)
 		velocity.z = move_toward(velocity.z, 0, currentSpeed)
-	
-	speedReader = Vector3(velocity.x,velocity.y,velocity.z).length()
-	# print (speedReader)
-	
+		
+	lastVelocity = velocity
 	move_and_slide()
+
