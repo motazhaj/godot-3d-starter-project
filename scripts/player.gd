@@ -8,6 +8,9 @@ extends CharacterBody3D
 @onready var neck = $neck
 @onready var camera = $neck/head/Camera3D
 @onready var animationPlayer = $neck/head/AnimationPlayer
+@onready var rayCastWall = $RayCast3DWall
+
+
 
 # Speed variables
 var currentSpeed = 5.0
@@ -21,6 +24,7 @@ var sprint = false
 var crouch = false
 var freeLook = false
 var slide = false
+var wallCollision = false
 
 # Slide variables
 var slideTimer = 0.0
@@ -46,10 +50,11 @@ const jumpVelocity = 8
 var crouchDepth = -0.5
 var freeLookTilt = 10
 var lerpSpeed = 10.0
-var airLerpSpeed = lerpSpeed/2
+var airLerpSpeed = lerpSpeed*0.2
 var lastVelocity = Vector3.ZERO
 
 # Input variables
+var input_dir = Vector2.ZERO
 var direction = Vector3.ZERO
 @export var mouseSens = 0.2
 
@@ -70,14 +75,9 @@ func _input(event):
 			rotate_y(deg_to_rad(-event.relative.x * mouseSens))
 		head.rotate_x(deg_to_rad(-event.relative.y * mouseSens))
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89),deg_to_rad(89))
+	
+func handleMovementState(delta):
 
-func _physics_process(delta):
-	
-	# Get the input direction and handle the movement/deceleration.	
-	var input_dir = Input.get_vector("left", "right", "forward", "backward")
-	
-	# Handel movement state
-	
 	# Crouch
 	if (Input.is_action_pressed("crouch") && is_on_floor()) || slide:
 		
@@ -129,13 +129,40 @@ func _physics_process(delta):
 			sprint = false
 			crouch = false
 	
-			
+func detectWall():
+	if rayCastWall.is_colliding():
+		wallCollision = true
+		
+	else:
+		wallCollision = false
+	print(wallCollision)
+	return wallCollision
+		
+func jump():
+	animationPlayer.play("jump")
+	crouch = false
+	slide = false
+	velocity.y = jumpVelocity
+
+func _physics_process(delta):
+	
+	input_dir = Input.get_vector("left", "right", "forward", "backward")
+	
+	if input_dir:
+		handleMovementState(delta)
+	
 	# Handle jump
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		animationPlayer.play("jump")
-		crouch = false
-		slide = false
-		velocity.y = jumpVelocity
+	if Input.is_action_just_pressed("jump") && is_on_floor():
+		jump()
+	
+	if Input.is_action_just_pressed("jump") && wallCollision:
+		jump()
+		direction = rayCastWall.get_collision_normal()
+	
+	# Handle wall grab
+	if detectWall() && Input.is_action_pressed("use") && !is_on_floor():
+		velocity.y = lerp(velocity.y, 5.0, delta * 20)
+		direction = lerp(direction, Vector3.ZERO, delta * lerpSpeed)
 	
 	# Handle land
 	if is_on_floor():

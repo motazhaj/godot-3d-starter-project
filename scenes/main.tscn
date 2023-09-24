@@ -31,9 +31,9 @@ fog_sun_scatter = 0.29
 fog_density = 0.0055
 fog_sky_affect = 0.069
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.029
+volumetric_fog_density = 0.016
 volumetric_fog_albedo = Color(0.367188, 0.710938, 0.996094, 1)
-volumetric_fog_sky_affect = 0.0
+volumetric_fog_sky_affect = 0.317
 adjustment_enabled = true
 adjustment_saturation = 1.18
 
@@ -49,6 +49,33 @@ height = 1.9
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sabve"]
 height = 1.2
+
+[sub_resource type="Animation" id="Animation_2cys0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_ip0y8"]
 resource_name = "jump"
@@ -76,33 +103,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, -0.08, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_2cys0"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera3D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_ybh4h"]
@@ -185,7 +185,7 @@ shadow_enabled = true
 [node name="stage" type="Node3D" parent="."]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="stage"]
-transform = Transform3D(4.26943, 0, 0, 0, 0.992892, 0, 0, 0, 5.16304, 0, -0.5, 0)
+transform = Transform3D(5.25184, 0, 0, 0, 0.992892, 0, 0, 0, 5.16304, 0, -0.5, 0)
 use_collision = true
 size = Vector3(50, 1, 50)
 material = SubResource("StandardMaterial3D_atry3")
@@ -198,6 +198,30 @@ material = SubResource("StandardMaterial3D_atry3")
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="stage"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 0.3, 0, -1, -1.31134e-08, 0, 6.5, -25)
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="stage"]
+transform = Transform3D(5.46161, 0, 0, 0, -4.37114e-08, 0.3, 0, -1, -1.31134e-08, 0, 6.5, -129.46)
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="stage"]
+transform = Transform3D(5.46161, 0, 0, 0, -4.37114e-08, 0.3, 0, -1, -1.31134e-08, 0, 6.50001, 129.209)
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-2.33729e-07, 1, 1.31134e-08, 0, -4.37114e-08, 0.3, 5.34711, 4.37114e-08, 1.63902e-15, 129.334, 6.5, -0.125367)
+use_collision = true
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="stage"]
+transform = Transform3D(-2.33729e-07, 1, 1.31134e-08, 0, -4.37114e-08, 0.3, 5.34711, 4.37114e-08, 1.63902e-15, -129.334, 6.50001, -0.125381)
 use_collision = true
 size = Vector3(50, 1, 50)
 material = SubResource("StandardMaterial3D_atry3")
@@ -215,7 +239,31 @@ size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_atry3")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="stage"]
-transform = Transform3D(0.0840468, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.0806008, 4.46946, -0.000193633, -3.80465, 6.97456, 5.29485)
+transform = Transform3D(0.308221, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.295584, 4.46946, -0.000193633, -3.53205, 7.05291, 11.0957)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.2515, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.241188, 4.46946, -0.000193633, 8.16965, 9.95481, 16.2314)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.2515, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.241188, 4.46946, -0.000193633, 25.2372, 9.90871, 23.7874)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.2515, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.241188, 4.46946, -0.000193633, 13.1096, 13.866, 35.4323)
+use_collision = true
+size = Vector3(20, 1, 20)
+material = SubResource("StandardMaterial3D_atry3")
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="stage"]
+transform = Transform3D(0.2515, 4.28621, -0.000185693, 0, -0.0165362, -0.100468, -0.241188, 4.46946, -0.000193633, 24.9684, 15.5434, 36.2153)
 use_collision = true
 size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_atry3")
@@ -246,6 +294,10 @@ shape = SubResource("CapsuleShape3D_sabve")
 
 [node name="RayCast3D" type="RayCast3D" parent="player"]
 target_position = Vector3(0, 1.9, 0)
+
+[node name="RayCast3DWall" type="RayCast3D" parent="player"]
+transform = Transform3D(0.98221, 0, 0, 0, -4.29338e-08, 0.98221, 0, -0.98221, -4.29338e-08, -0.000863552, 1.00584, -0.0059948)
+target_position = Vector3(0, 2, 0)
 
 [node name="neck" type="Node3D" parent="player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
