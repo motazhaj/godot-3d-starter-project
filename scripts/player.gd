@@ -61,6 +61,62 @@ var direction = Vector3.ZERO
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 	
+
+func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _input(event):
+	# Mouse look logic
+	if event is InputEventMouseMotion:
+		mouseLook(event)
+
+func _physics_process(delta):
+	
+	input_dir = Input.get_vector("left", "right", "forward", "backward")
+	
+	handleMovementState(delta)
+	
+	if Input.is_action_just_pressed("jump") && is_on_floor():
+		jump()
+	
+	if Input.is_action_just_pressed("jump") && wallCollision:
+		jump()
+		direction = rayCastWall.get_collision_normal()
+
+	# Handle wall climb
+	if detectWall() && Input.is_action_pressed("use") && !is_on_floor():
+		wallClimb(delta)
+	
+	# Handle land
+	if is_on_floor():
+		landAnimation()	
+	
+	handleFreeLook(delta)
+			
+	if input_dir != Vector2.ZERO:
+		handleHeadBob(delta)
+
+	# Add the gravity.
+	if !is_on_floor():
+		velocity.y -= gravity * delta
+
+	# Get direction
+	getDirection(delta)
+	
+	move(delta)
+	
+	move_and_slide()
+
+func mouseLook(event):
+	if freeLook:
+			neck.rotate_y(deg_to_rad(-event.relative.x * mouseSens))
+			neck.rotation.y = clamp(neck.rotation.y, deg_to_rad(-120),deg_to_rad(120))
+	else:
+		rotate_y(deg_to_rad(-event.relative.x * mouseSens))
+			
+	head.rotate_x(deg_to_rad(-event.relative.y * mouseSens))
+	head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89),deg_to_rad(89))
+
 func handleMovementState(delta):
 
 	# Crouch
@@ -181,63 +237,22 @@ func sideMoveHeadTilt(delta):
 	else:
 		neck.rotation.z = lerp(neck.rotation.z, 0.0 , delta*lerpSpeed)
 
+func wallClimb(delta):
+	velocity.y = lerp(velocity.y, 5.0, delta * 20)
+	direction = lerp(direction, Vector3.ZERO, delta * lerpSpeed)
 
-func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-
-func _input(event):
-	# Mouse look logic
-	if event is InputEventMouseMotion:
-		if freeLook:
-			neck.rotate_y(deg_to_rad(-event.relative.x * mouseSens))
-			neck.rotation.y = clamp(neck.rotation.y, deg_to_rad(-120),deg_to_rad(120))
-		else:
-			rotate_y(deg_to_rad(-event.relative.x * mouseSens))
-		head.rotate_x(deg_to_rad(-event.relative.y * mouseSens))
-		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89),deg_to_rad(89))
-
-func _physics_process(delta):
-	
-	input_dir = Input.get_vector("left", "right", "forward", "backward")
-	
-	handleMovementState(delta)
-	
-	if Input.is_action_just_pressed("jump") && is_on_floor():
-		jump()
-	
-	if Input.is_action_just_pressed("jump") && wallCollision:
-		jump()
-		direction = rayCastWall.get_collision_normal()
-
-	# Handle wall grab
-	if detectWall() && Input.is_action_pressed("use") && !is_on_floor():
-		velocity.y = lerp(velocity.y, 5.0, delta * 20)
-		direction = lerp(direction, Vector3.ZERO, delta * lerpSpeed)
-	
-	# Handle land
-	if is_on_floor():
-		landAnimation()	
-	
-	handleFreeLook(delta)	
-			
-	if input_dir != Vector2.ZERO:
-		handleHeadBob(delta)
-
-	# Add the gravity.
-	if !is_on_floor():
-		velocity.y -= gravity * delta
-
-	# Get direction
+func getDirection(delta):
 	if is_on_floor():
 		direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*lerpSpeed)
 	else:
+		# Air control
 		if input_dir != Vector2.ZERO:
 			direction = lerp(direction,(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(),delta*airLerpSpeed)
-	
 	if slide:
 		direction = transform.basis * Vector3(slideVector.x , 0 , slideVector.y)
 		currentSpeed = (slideTimer * slideSpeed + sprintSpeed)
-		
+
+func move(delta):
 	if direction:
 		velocity.x = direction.x * currentSpeed
 		velocity.z = direction.z * currentSpeed
@@ -248,5 +263,3 @@ func _physics_process(delta):
 		velocity.z = move_toward(velocity.z, 0, currentSpeed)
 		
 	lastVelocity = velocity
-	move_and_slide()
-
