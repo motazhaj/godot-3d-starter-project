@@ -1,8 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://b6qoucxdc2snh"]
+[gd_scene load_steps=8 format=3 uid="uid://b6qoucxdc2snh"]
 
 [ext_resource type="Texture2D" uid="uid://c6t180pi31yxy" path="res://assets/dev/grids/Dark/texture_13.png" id="2_fh4t2"]
 [ext_resource type="Texture2D" uid="uid://dk4ijpkefj3pq" path="res://assets/hdri/animestyled_hdr.hdr" id="2_k7vaq"]
-[ext_resource type="Script" uid="uid://48sivr3f365b" path="res://scripts/player.gd" id="3_f5nh4"]
+[ext_resource type="PackedScene" uid="uid://bui3t2i05wq6a" path="res://scenes/Players/first-person.tscn" id="3_sugp2"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_wktws"]
 panorama = ExtResource("2_k7vaq")
@@ -43,131 +43,6 @@ albedo_color = Color(0.533333, 0.533333, 0.533333, 1)
 albedo_texture = ExtResource("2_fh4t2")
 uv1_triplanar = true
 uv1_world_triplanar = true
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e4tum"]
-height = 1.9
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sabve"]
-height = 1.2
-
-[sub_resource type="Animation" id="Animation_2cys0"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera3D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_ip0y8"]
-resource_name = "jump"
-length = 0.3
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera3D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(-0.0698132, 0, 0.00872665), Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, -0.08, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_ybh4h"]
-resource_name = "land"
-length = 0.3
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera3D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(-0.0698132, 0, 0.00872665), Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, -0.08, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_3x3gt"]
-resource_name = "landHeavy"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera3D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.5),
-"transitions": PackedFloat32Array(0.378929, 1.18921, 2),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(-0.207694, 0, 0.00523599), Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.5),
-"transitions": PackedFloat32Array(0.378929, 1.18921, 2),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, -1.192, 0), Vector3(0, 0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_b4dju"]
-_data = {
-&"RESET": SubResource("Animation_2cys0"),
-&"jump": SubResource("Animation_ip0y8"),
-&"land": SubResource("Animation_ybh4h"),
-&"landHeavy": SubResource("Animation_3x3gt")
-}
 
 [node name="world" type="Node3D"]
 
@@ -292,34 +167,5 @@ use_collision = true
 size = Vector3(20, 1, 20)
 material = SubResource("StandardMaterial3D_atry3")
 
-[node name="player" type="CharacterBody3D" parent="."]
+[node name="player" parent="." instance=ExtResource("3_sugp2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.62736, 0, 4.11738)
-script = ExtResource("3_f5nh4")
-
-[node name="standCollision" type="CollisionShape3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
-shape = SubResource("CapsuleShape3D_e4tum")
-
-[node name="crouchCollision" type="CollisionShape3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-shape = SubResource("CapsuleShape3D_sabve")
-
-[node name="RayCast3D" type="RayCast3D" parent="player"]
-target_position = Vector3(0, 1.9, 0)
-
-[node name="RayCast3DWall" type="RayCast3D" parent="player"]
-transform = Transform3D(0.98221, 0, 0, 0, -4.29338e-08, 0.98221, 0, -0.98221, -4.29338e-08, -0.000863552, 1.00584, -0.0059948)
-target_position = Vector3(0, 2, 0)
-
-[node name="neck" type="Node3D" parent="player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
-
-[node name="head" type="Node3D" parent="player/neck"]
-
-[node name="Camera3D" type="Camera3D" parent="player/neck/head"]
-fov = 80.0
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="player/neck/head"]
-libraries = {
-"": SubResource("AnimationLibrary_b4dju")
-}
