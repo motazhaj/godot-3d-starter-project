@@ -1,8 +1,8 @@
 [gd_scene load_steps=15 format=3 uid="uid://b6qoucxdc2snh"]
 
-[ext_resource type="Texture2D" uid="uid://c6t180pi31yxy" path="res://assets/dev/grids/dark/texture_13.png" id="2_fh4t2"]
+[ext_resource type="Texture2D" uid="uid://c6t180pi31yxy" path="res://assets/dev/grids/Dark/texture_13.png" id="2_fh4t2"]
 [ext_resource type="Texture2D" uid="uid://dk4ijpkefj3pq" path="res://assets/hdri/animestyled_hdr.hdr" id="2_k7vaq"]
-[ext_resource type="Script" path="res://scripts/player.gd" id="3_f5nh4"]
+[ext_resource type="Script" uid="uid://48sivr3f365b" path="res://scripts/player.gd" id="3_f5nh4"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_wktws"]
 panorama = ExtResource("2_k7vaq")
@@ -163,10 +163,10 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b4dju"]
 _data = {
-"RESET": SubResource("Animation_2cys0"),
-"jump": SubResource("Animation_ip0y8"),
-"land": SubResource("Animation_ybh4h"),
-"landHeavy": SubResource("Animation_3x3gt")
+&"RESET": SubResource("Animation_2cys0"),
+&"jump": SubResource("Animation_ip0y8"),
+&"land": SubResource("Animation_ybh4h"),
+&"landHeavy": SubResource("Animation_3x3gt")
 }
 
 [node name="world" type="Node3D"]
